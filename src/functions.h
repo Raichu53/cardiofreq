@@ -3,5 +3,4 @@ typedef struct vector2{
 }vec2;
 
 
-void heartBeat();
 int periodToBPM(unsigned long t);

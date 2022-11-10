@@ -14,21 +14,29 @@ public:
     vec2 screenDimension;
     Adafruit_SSD1306* pDisp;
 
-    const char* txt;
     int size;
     vec2 cursorPos;
     uint16_t color;
 
     oled();
-    void printText();
     
 private:
 
 };
+class heartSensor
+{
+public:
+    oled* screen;
+    unsigned long startMillis;
+    unsigned long currentMillis;
+    unsigned long oldTime;
+    bool start;
+    bool stop;
 
-extern oled* screen;
-extern unsigned long currentMillis;
-extern unsigned long oldTime;
-extern bool start;
-extern bool stop;
+    heartSensor();
+    void heartBeat();
+private:
+};
+
+extern heartSensor* heart;
 
