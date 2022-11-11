@@ -7,7 +7,22 @@
 #include "functions.h"
 
 #define sensorHeartCapt A0
+#define clockPin 6
+#define dataPin 7
+#define resetPin 8
 
+class clock
+{
+public:
+    unsigned char buffer;  
+
+    clock(bool init);
+    bool initClock(); //call once
+    unsigned char readRegister(unsigned char addr);
+    void writeRegister(unsigned char addr,unsigned char data);
+    void afficheHeure();
+private:
+};
 class oled
 {
 public:
@@ -19,7 +34,6 @@ public:
     uint16_t color;
 
     oled();
-    
 private:
 
 };
@@ -39,4 +53,4 @@ private:
 };
 
 extern heartSensor* heart;
-
+extern clock* horloge;

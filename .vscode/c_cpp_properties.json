@@ -8,11 +8,11 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/include",
-                "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/src",
-                "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit SSD1306",
-                "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit GFX Library",
-                "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit BusIO",
+                "c:/Users/matt0/Documents/PlatformIO/Projects/cardio/include",
+                "c:/Users/matt0/Documents/PlatformIO/Projects/cardio/src",
+                "c:/Users/matt0/Documents/PlatformIO/Projects/cardio/.pio/libdeps/nanoatmega328/Adafruit SSD1306",
+                "c:/Users/matt0/Documents/PlatformIO/Projects/cardio/.pio/libdeps/nanoatmega328/Adafruit GFX Library",
+                "c:/Users/matt0/Documents/PlatformIO/Projects/cardio/.pio/libdeps/nanoatmega328/Adafruit BusIO",
                 "C:/Users/matt0/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
                 "C:/Users/matt0/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                 "C:/Users/matt0/.platformio/packages/framework-arduino-avr/cores/arduino",
@@ -25,11 +25,11 @@
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/include",
-                    "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/src",
-                    "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit SSD1306",
-                    "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit GFX Library",
-                    "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit BusIO",
+                    "c:/Users/matt0/Documents/PlatformIO/Projects/cardio/include",
+                    "c:/Users/matt0/Documents/PlatformIO/Projects/cardio/src",
+                    "c:/Users/matt0/Documents/PlatformIO/Projects/cardio/.pio/libdeps/nanoatmega328/Adafruit SSD1306",
+                    "c:/Users/matt0/Documents/PlatformIO/Projects/cardio/.pio/libdeps/nanoatmega328/Adafruit GFX Library",
+                    "c:/Users/matt0/Documents/PlatformIO/Projects/cardio/.pio/libdeps/nanoatmega328/Adafruit BusIO",
                     "C:/Users/matt0/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
                     "C:/Users/matt0/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
                     "C:/Users/matt0/.platformio/packages/framework-arduino-avr/cores/arduino",

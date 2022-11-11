@@ -23,3 +23,21 @@ heartSensor::heartSensor()
     start = false;
     stop = false;
 }
+//init param utilisé que lors de la creation
+clock::clock(bool init)
+{
+  pinMode(clockPin, OUTPUT); 
+  digitalWrite(clockPin, LOW);   
+
+  pinMode(resetPin, OUTPUT);   
+  digitalWrite(resetPin, LOW); 
+
+  pinMode(dataPin, OUTPUT);
+  digitalWrite(dataPin, LOW);
+
+  if(init){
+    if(!initClock()){
+        Serial.println("Erreur dans l'initialisation de la clock");
+    }
+  }
+}
