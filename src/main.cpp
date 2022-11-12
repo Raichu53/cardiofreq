@@ -25,14 +25,12 @@ void loop() {
   
   heart->currentMillis = millis();
 
-  if(heart->screen->isButtonPressed()){
-    horloge->afficheHeure();
-    
-  }
-  else{
-    heart->heartBeat();
+  //horloge->afficheHeure();
+
+  heart->heartBeat();
+  if(heart->screen->pressed){
     heart->beebBpm();
   }
-  
+  heart->screen->isButtonPressed();
   heart->screen->pDisp->display();
 }

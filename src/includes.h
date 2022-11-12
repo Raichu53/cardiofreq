@@ -40,6 +40,9 @@ public:
 
     bool bButton;
     bool buffer;
+    
+    bool pressed;
+    unsigned long delayMax;
     oled();
     bool isButtonPressed();
     void drawBlackScreen();

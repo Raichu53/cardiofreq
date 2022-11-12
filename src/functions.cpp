@@ -221,24 +221,22 @@ void clock::afficheHeure()
   heart->screen->pDisp->print((buffer & 0b01110000)>>4,DEC);
   heart->screen->pDisp->print((buffer & 0b00001111),DEC);
 }
-/// @brief cette fonction sert a switch entre l'heure et la courbe bpm. montage "Pull down" pour l'heure
+/// @brief cette fonction sert a switch entre l'heure et la courbe bpm. montage "Pull down" pour l'heure (deprecated ! )
 /// @return true si pressé, false sinon
 bool oled::isButtonPressed()
 {
   bButton = (bool)digitalRead(buttonPin);
   if(bButton){
-    drawBlackScreen();
-    heart->screen->cursorPos.x = 0;
-    buffer = true;
-    return true;
-  }
-  else{
-    if(buffer){
-      drawBlackScreen();
-      buffer = false;
+    //ne pas revenir dans cette fonction pendant 1 secondes
+    if((heart->currentMillis - delayMax) > 1000){
+      pressed = !pressed;
+      delayMax = heart->currentMillis;
     }
+    return true;
+  }else{
     return false;
   }
+  
 }
 /// @brief ecran noir
 void oled::drawBlackScreen()

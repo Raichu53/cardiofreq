@@ -15,6 +15,8 @@ oled::oled()
 
     bButton = false;
     buffer = false;
+
+    pressed = false;
 }
 
 heartSensor::heartSensor()
