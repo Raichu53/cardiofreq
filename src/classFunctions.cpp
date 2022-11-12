@@ -8,20 +8,15 @@ oled::oled()
 
     pDisp = new Adafruit_SSD1306(screenDimension.x,screenDimension.y,&Wire,-1);
 
-    size = 1;
     cursorPos.x = 0;
     cursorPos.y = 32;
-    color = WHITE;
-
+    
     bButton = false;
-    buffer = false;
-
+    
     pressed = false;
     press = false;
-    bool doublePressed = false;
     delayMax = 0;
     doublePush = 0;
-    secondPress = 0;
 
     toggleScreen = false;
 }
@@ -29,16 +24,17 @@ oled::oled()
 heartSensor::heartSensor()
 {
     screen = new oled();
+    horloge = new clock();
     startMillis = millis();
     currentMillis = 0;
     oldTime = 0;
     start = false;
-    stop = false;
     bpm = 0;
     interval = 0.f;
     toneValue = 0;
     lastBeep = 0;
-    bBpm = false;
+    pinMode(sensorHeartCapt,INPUT);
+
     pinMode(redLed,OUTPUT);
     pinMode(yellowLed,OUTPUT);
     pinMode(greenLed,OUTPUT);

@@ -1,12 +1,12 @@
 #include "includes.h"
 
+//main class qui contient les ptr 
 heartSensor* heart = new heartSensor();
-clock* horloge = new clock();
 
 void setup() {
  
   Serial.begin(9600);
-  pinMode(sensorHeartCapt,INPUT);
+  
   if(!heart->screen->pDisp->begin(SSD1306_SWITCHCAPVCC,0X3C)){
     Serial.print("Display1 initialization failed, exiting....\n");
     exit(1);
@@ -26,14 +26,19 @@ void loop() {
 
   if(heart->screen->isButtonPressed() == 2){
     heart->screen->toggleScreen = !heart->screen->toggleScreen;
+    if(!heart->screen->toggleScreen){
+      heart->screen->pDisp->clearDisplay();
+      heart->screen->cursorPos.x = 0;
+    }
   }
   if(heart->screen->toggleScreen){
-    horloge->afficheHeure();
+    heart->horloge->afficheHeure();
   }else{
     heart->heartBeat();
     if(heart->screen->pressed){
       heart->beebBpm();
     }
+    heart->healthLeds(false);
   }
   heart->screen->pDisp->display();
 }

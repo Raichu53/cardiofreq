@@ -3,8 +3,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <Tone.h>
-
-#include "functions.h"
+#include <Adafruit_ILI9341.h> //pour les couleurs
 
 #define sensorHeartCapt A0
 #define clockPin 6
@@ -15,6 +14,10 @@
 #define yellowLed 11
 #define greenLed 10
 #define buzzerPin 5
+
+typedef struct vector2{
+    int x,y;
+}vec2;
 
 class clock
 {
@@ -31,24 +34,14 @@ private:
 class oled
 {
 public:
-    vec2 screenDimension;
     Adafruit_SSD1306* pDisp;
 
-    int size;
-    vec2 cursorPos;
-    uint16_t color;
+    vec2 screenDimension,cursorPos;
 
-    bool bButton;
-    bool buffer;
-    
-    bool pressed;
-    bool press;
-    bool doublePressed;
-    unsigned long delayMax;
-    unsigned long doublePush;
-    unsigned long secondPress;
+    bool bButton,pressed,press,doublePressed,toggleScreen;
 
-    bool toggleScreen;
+    unsigned long delayMax,doublePush;
+
     oled();
     int isButtonPressed();
     void drawBlackScreen();
@@ -59,24 +52,21 @@ class heartSensor
 {
 public:
     oled* screen;
-    unsigned long startMillis;
-    unsigned long currentMillis;
-    unsigned long oldTime;
+    clock* horloge;
+    unsigned long startMillis,currentMillis,oldTime,lastBeep;
+
     bool start;
-    bool stop;
-    int bpm;
 
+    int bpm,toneValue;
+ 
     float interval;
-    int toneValue;
-    unsigned long lastBeep;
-
-    bool bBpm;
+    
     heartSensor();
     void heartBeat();
-    void healthLeds();
+    void healthLeds(bool active);
     void beebBpm();
+    int periodToBPM(unsigned long t);
 private:
 };
 
 extern heartSensor* heart;
-extern clock* horloge;

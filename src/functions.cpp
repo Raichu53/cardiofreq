@@ -20,58 +20,57 @@ void heartSensor::heartBeat()
         }
     }
     
-    //drawing sinusoide on oled heart->screen
-    heart->screen->cursorPos.x = heart->screen->cursorPos.x + 1;
-    if(heart->screen->cursorPos.x > 128)
+    //drawing sinusoide on oled screen
+    screen->cursorPos.x = screen->cursorPos.x + 1;
+    if(screen->cursorPos.x > 128)
     {
-        heart->screen->cursorPos.x = heart->screen->cursorPos.x - 128;
-        heart->screen->pDisp->clearDisplay();
+        screen->cursorPos.x = screen->cursorPos.x - 128;
+        screen->pDisp->clearDisplay();
     }
     for(int k = 0; k < 20;k++)
     {
         if(buffer[k] > moyenne){
             //vers le haut
-            heart->screen->cursorPos.y = heart->screen->cursorPos.y - (buffer[k] - moyenne);
+            screen->cursorPos.y = screen->cursorPos.y - (buffer[k] - moyenne);
         }
         else{
             //vers le bas
-            heart->screen->cursorPos.y = heart->screen->cursorPos.y + (moyenne - buffer[k]);
+            screen->cursorPos.y = screen->cursorPos.y + (moyenne - buffer[k]);
         }
-        heart->screen->pDisp->drawLine(heart->screen->cursorPos.x,32,heart->screen->cursorPos.x,heart->screen->cursorPos.y,WHITE);
+        screen->pDisp->drawLine(screen->cursorPos.x,32,screen->cursorPos.x,screen->cursorPos.y,WHITE);
     }
     /*
         avoir les changement des fronts 
         il faut que a chaque changement de front on compte le temps jusqu'au prochain changement de front
         et a partir de la, calculer la frequence
     */
-    if(heart->screen->cursorPos.y > 32){
+    if(screen->cursorPos.y > 32){
         //etat bas
-        if(heart->start){
-            tempsEnHaut = (heart->currentMillis - startTime); //car le calcul est sur le front descendant
-            period = (tempsEnHaut - heart->oldTime)/4;
+        if(start){
+            tempsEnHaut = (currentMillis - startTime); //car le calcul est sur le front descendant
+            period = (tempsEnHaut - oldTime)/4;
 
             bpm = periodToBPM(period);
             if(bpm>30){
-                heart->screen->pDisp->setCursor(5,5);
-                heart->screen->pDisp->setTextColor(WHITE,BLACK);
-                heart->screen->pDisp->setTextSize(2);
-                heart->screen->pDisp->println(bpm);
+                screen->pDisp->setCursor(5,5);
+                screen->pDisp->setTextColor(WHITE,BLACK);
+                screen->pDisp->setTextSize(2);
+                screen->pDisp->println(bpm);
             }
-            heart->oldTime = tempsEnHaut; 
-            heart->start = !heart->start;
+            oldTime = tempsEnHaut; 
+            start = !start;
         }
     }
     else{
         //etat haut
-        if(!heart->start){
-            heart->start = !heart->start;
-            startTime = heart->currentMillis;
+        if(!start){
+            start = !start;
+            startTime = currentMillis;
         }
     }
-    healthLeds();
 }
 // period * x = 60 <=> x = 60/ period
-int periodToBPM(unsigned long t){
+int heartSensor::periodToBPM(unsigned long t){
     return (60000/t);
 }
 /// @brief https://pdf1.alldatasheet.com/datasheet-pdf/download/254790/MAXIM/DS1302.html page 8/13
@@ -257,7 +256,7 @@ void oled::drawBlackScreen()
   heart->screen->pDisp->fillRect(0,0,128,64,BLACK);
 }
 /// @brief allume les led en fonction des bpm
-void heartSensor::healthLeds()
+void heartSensor::healthLeds(bool active)
 {
   if(bpm >= 50 && bpm < 90){
     digitalWrite(greenLed,HIGH);
@@ -278,6 +277,7 @@ void heartSensor::healthLeds()
     digitalWrite(greenLed,LOW);
     digitalWrite(yellowLed,LOW);
   }
+  
 }
 /// @brief beep en fonction 
 void heartSensor::beebBpm()
