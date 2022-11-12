@@ -10,13 +10,17 @@
 #define clockPin 6
 #define dataPin 7
 #define resetPin 8
+#define buttonPin 3
+#define redLed 12
+#define yellowLed 11
+#define greenLed 10
 
 class clock
 {
 public:
     unsigned char buffer;  
 
-    clock(bool init);
+    clock();
     bool initClock(); //call once
     unsigned char readRegister(unsigned char addr);
     void writeRegister(unsigned char addr,unsigned char data);
@@ -33,7 +37,11 @@ public:
     vec2 cursorPos;
     uint16_t color;
 
+    bool bButton;
+    bool buffer;
     oled();
+    bool isButtonPressed();
+    void drawBlackScreen();
 private:
 
 };
@@ -46,9 +54,11 @@ public:
     unsigned long oldTime;
     bool start;
     bool stop;
+    int bpm;
 
     heartSensor();
     void heartBeat();
+    void healthLeds();
 private:
 };
 

@@ -1,16 +1,15 @@
 #include "includes.h"
-
+/// @brief calcule les bpm grace a la periode entre chaque pic sur la courbe
 void heartSensor::heartBeat()
 {   
     unsigned long startTime,tempsEnHaut,period = 0;
-    int moyenne,bpm;
-    int sensorPin = A0;
+    int moyenne;
     int buffer[20] = {};
 
     //on rempli le tableau
     for(int i = 0; i < 20;i++)
     {
-        buffer[i] = analogRead(sensorPin);
+        buffer[i] = analogRead(sensorHeartCapt);
     }
     //on fait la moyenne des 20 valeurs
     for(int j = 0; j < 20;j++)
@@ -27,6 +26,7 @@ void heartSensor::heartBeat()
     {
         heart->screen->cursorPos.x = heart->screen->cursorPos.x - 128;
         heart->screen->pDisp->clearDisplay();
+        delay(100);
     }
     for(int k = 0; k < 20;k++)
     {
@@ -69,12 +69,15 @@ void heartSensor::heartBeat()
             startTime = heart->currentMillis;
         }
     }
+    healthLeds();
 }
 // period * x = 60 <=> x = 60/ period
 int periodToBPM(unsigned long t){
     return (60000/t);
 }
-
+/// @brief https://pdf1.alldatasheet.com/datasheet-pdf/download/254790/MAXIM/DS1302.html page 8/13
+/// @param addr l'addresse du registre a ecrire
+/// @param data la valeur a mettre dans le registre precedent
 void clock::writeRegister(unsigned char addr,unsigned char data)
 { 
 //https://pdf1.alldatasheet.com/datasheet-pdf/download/254790/MAXIM/DS1302.html 
@@ -129,15 +132,16 @@ void clock::writeRegister(unsigned char addr,unsigned char data)
   digitalWrite(resetPin, LOW);
   delay(1); 
 }
-
+/// @brief https://pdf1.alldatasheet.com/datasheet-pdf/download/254790/MAXIM/DS1302.html page 8/13
+/// @param addr l'addresse du registre a lire
 unsigned char clock::readRegister(unsigned char addr)
 { 
+  //voir comment dans writeRegister()
   unsigned char i;
   unsigned char data = 0;
-  // RST monte a "1", debut de transaction
   digitalWrite(resetPin, HIGH);
   delay(1);
-  // Bit de lecture/ecriture mis a lecture
+ 
   digitalWrite(dataPin, HIGH);   
   delay(1);
   digitalWrite(clockPin, HIGH);   
@@ -145,33 +149,27 @@ unsigned char clock::readRegister(unsigned char addr)
   digitalWrite(clockPin, LOW);   
   delay(1);
   // Ecriture de l'adresse
-//Serial.print("Adresse: ");
   for (i=0 ; i<=4 ; i++)
   {
     digitalWrite(dataPin, (addr & (1<<i))>>i);   
     delay(1);
-//Serial.print((adresse & (1<<i))>>i);
     digitalWrite(clockPin, HIGH);   
     delay(1);
     digitalWrite(clockPin, LOW);   
     delay(1);
   }
-//Serial.println();
-  // Bit de horloge/RAM mis a horloge
   digitalWrite(dataPin, LOW);   
   delay(1);
   digitalWrite(clockPin, HIGH);   
   delay(1);
   digitalWrite(clockPin, LOW);   
   delay(1);
-  // 8 eme bit toujours un "1"
   digitalWrite(dataPin, HIGH);   
   delay(1);
   digitalWrite(clockPin, HIGH);   
   delay(1);
-      // Attention, ici on n'abaisse pas le clk car c'est une lecture
-  // Lecture de la donnee de 8 bits
-  pinMode(dataPin, INPUT);    // On passe en mode de lecture
+  // Lecture de la donnee de 8 bits donc input 
+  pinMode(dataPin, INPUT);    
   delay(1);
   for (i=0 ; i<=7 ; i++)
   {
@@ -181,34 +179,33 @@ unsigned char clock::readRegister(unsigned char addr)
     digitalWrite(clockPin, HIGH);   
     delay(1);
   }
-  // RST baisse a "0", fin de transaction
   digitalWrite(clockPin, LOW);
   delay(1); 
   digitalWrite(clockPin, LOW);   
   delay(1);
-  pinMode(dataPin, OUTPUT);    // On passe en mode d'ecriture
+  pinMode(dataPin, OUTPUT);   
   delay(1);
   return data;
 }
-
+/// @brief ecrit dans les registres les valeurs souhaités 
+/// @return true si sucessfull
 bool clock::initClock()
 {
   writeRegister(7,0b00000000);    // access aux registres
   writeRegister(0,0b00000000);    // secondes
-  writeRegister(1,0b00011000);    // minutes
-  writeRegister(2,0b00000000);    // 24 heures
+  writeRegister(1,0b01010010);    // minutes
+  writeRegister(2,0b00010011);    // 24 heures
   writeRegister(3,0b00010010);    // jour (numero)
   writeRegister(4,0b00010001);    // mois
   writeRegister(5,0b00000110);    // date (de 1-7 ex mardi)
   writeRegister(6,0b00100010);    // annee 
   return true;
 }
+/// @brief cette fonction recupere la valeur des registre et les affiche sur l'ecran oled
 void clock::afficheHeure()
 {
-
-  heart->screen->pDisp->fillRect(80-2,5-2,50,10,BLACK);
-  heart->screen->pDisp->setCursor(80,5);
-  heart->screen->pDisp->setTextSize(1.5);
+  heart->screen->pDisp->setCursor(30,20);
+  heart->screen->pDisp->setTextSize(2);
   heart->screen->pDisp->setTextColor(WHITE);
   //heures
   buffer = readRegister(0x02);
@@ -224,6 +221,46 @@ void clock::afficheHeure()
   buffer = readRegister(0x00); 
   heart->screen->pDisp->print((buffer & 0b01110000)>>4,DEC);
   heart->screen->pDisp->print((buffer & 0b00001111),DEC);
-
-  
+}
+/// @brief cette fonction sert a switch entre l'heure et la courbe bpm. montage "Pull down" pour l'heure
+/// @return true si pressé, false sinon
+bool oled::isButtonPressed()
+{
+  bButton = (bool)digitalRead(buttonPin);
+  if(bButton){
+    drawBlackScreen();
+    heart->screen->cursorPos.x = 0;
+    buffer = true;
+    return true;
+  }
+  else{
+    if(buffer){
+      drawBlackScreen();
+      buffer = false;
+    }
+    return false;
+  }
+}
+/// @brief ecran noir
+void oled::drawBlackScreen()
+{
+  heart->screen->pDisp->fillRect(0,0,128,64,BLACK);
+}
+/// @brief allume les led en fonction des bpm
+void heartSensor::healthLeds()
+{
+  if(bpm >= 50 && bpm < 90){
+    digitalWrite(greenLed,HIGH);
+    digitalWrite(redLed,LOW);
+    digitalWrite(yellowLed,LOW);
+  }
+  else if(bpm >= 90 && bpm < 170){
+    digitalWrite(yellowLed,HIGH);
+    digitalWrite(redLed,LOW);
+    digitalWrite(greenLed,LOW);
+  }else if((bpm >= 170 && bpm < 220) || bpm < 50){
+    digitalWrite(redLed,HIGH);
+    digitalWrite(greenLed,LOW);
+    digitalWrite(yellowLed,LOW);
+  }
 }

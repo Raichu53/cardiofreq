@@ -1,7 +1,7 @@
 #include "includes.h"
 
 heartSensor* heart = new heartSensor();
-clock* horloge = new clock(false);
+clock* horloge = new clock();
 
 void setup() {
  
@@ -17,6 +17,7 @@ void setup() {
     exit(1);
   }
   */
+  //horloge->initClock();
   heart->screen->pDisp->clearDisplay();
 }
 
@@ -24,8 +25,13 @@ void loop() {
   
   heart->currentMillis = millis();
 
-  heart->heartBeat();
-  horloge->afficheHeure();
-
+  if(heart->screen->isButtonPressed()){
+    horloge->afficheHeure();
+    
+  }
+  else{
+    heart->heartBeat();
+  }
+  
   heart->screen->pDisp->display();
 }
