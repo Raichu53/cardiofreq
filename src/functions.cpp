@@ -26,7 +26,6 @@ void heartSensor::heartBeat()
     {
         heart->screen->cursorPos.x = heart->screen->cursorPos.x - 128;
         heart->screen->pDisp->clearDisplay();
-        delay(100);
     }
     for(int k = 0; k < 20;k++)
     {
@@ -258,9 +257,35 @@ void heartSensor::healthLeds()
     digitalWrite(yellowLed,HIGH);
     digitalWrite(redLed,LOW);
     digitalWrite(greenLed,LOW);
-  }else if((bpm >= 170 && bpm < 220) || bpm < 50){
+  }else if((bpm >= 170 && bpm < 220) || (bpm < 50 && bpm >= 30)){
     digitalWrite(redLed,HIGH);
     digitalWrite(greenLed,LOW);
     digitalWrite(yellowLed,LOW);
   }
+  else{
+    digitalWrite(redLed,LOW);
+    digitalWrite(greenLed,LOW);
+    digitalWrite(yellowLed,LOW);
+  }
+}
+/// @brief beep en fonction 
+void heartSensor::beebBpm()
+{
+  interval = (float)((float)60 / (float)bpm);
+  
+  if(bpm < 50){
+    toneValue = 255;
+  }
+  else if((bpm >= 50) && (bpm <=90)){
+    toneValue = 90;
+  }else if((bpm>= 90) && (bpm <= 170)){
+    toneValue = 2;
+  }else if((bpm > 170) && (bpm < 220)){
+    toneValue = 1;
+  }
+  if(((currentMillis - lastBeep) > (interval*1000)) && (bpm > 30)){
+    tone(buzzerPin,toneValue,50);
+    lastBeep = currentMillis;
+  }
+  
 }

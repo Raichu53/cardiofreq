@@ -26,7 +26,9 @@ heartSensor::heartSensor()
     start = false;
     stop = false;
     bpm = 0;
-
+    interval = 0.f;
+    toneValue = 0;
+    lastBeep = 0;
     pinMode(redLed,OUTPUT);
     pinMode(yellowLed,OUTPUT);
     pinMode(greenLed,OUTPUT);
@@ -34,6 +36,8 @@ heartSensor::heartSensor()
     digitalWrite(redLed,LOW);
     digitalWrite(yellowLed,LOW);
     digitalWrite(greenLed,LOW);
+
+    pinMode(buzzerPin,OUTPUT);
 }
 //init param utilisé que lors de la creation
 clock::clock()

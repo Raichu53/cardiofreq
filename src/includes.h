@@ -2,7 +2,7 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-
+#include <Tone.h>
 
 #include "functions.h"
 
@@ -14,6 +14,7 @@
 #define redLed 12
 #define yellowLed 11
 #define greenLed 10
+#define buzzerPin 5
 
 class clock
 {
@@ -56,9 +57,14 @@ public:
     bool stop;
     int bpm;
 
+    float interval;
+    int toneValue;
+    unsigned long lastBeep;
+
     heartSensor();
     void heartBeat();
     void healthLeds();
+    void beebBpm();
 private:
 };
 

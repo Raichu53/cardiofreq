@@ -31,6 +31,7 @@ void loop() {
   }
   else{
     heart->heartBeat();
+    heart->beebBpm();
   }
   
   heart->screen->pDisp->display();
