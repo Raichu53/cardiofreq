@@ -42,9 +42,15 @@ public:
     bool buffer;
     
     bool pressed;
+    bool press;
+    bool doublePressed;
     unsigned long delayMax;
+    unsigned long doublePush;
+    unsigned long secondPress;
+
+    bool toggleScreen;
     oled();
-    bool isButtonPressed();
+    int isButtonPressed();
     void drawBlackScreen();
 private:
 
@@ -64,6 +70,7 @@ public:
     int toneValue;
     unsigned long lastBeep;
 
+    bool bBpm;
     heartSensor();
     void heartBeat();
     void healthLeds();

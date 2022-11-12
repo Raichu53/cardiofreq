@@ -22,15 +22,18 @@ void setup() {
 }
 
 void loop() {
-  
   heart->currentMillis = millis();
 
-  //horloge->afficheHeure();
-
-  heart->heartBeat();
-  if(heart->screen->pressed){
-    heart->beebBpm();
+  if(heart->screen->isButtonPressed() == 2){
+    heart->screen->toggleScreen = !heart->screen->toggleScreen;
   }
-  heart->screen->isButtonPressed();
+  if(heart->screen->toggleScreen){
+    horloge->afficheHeure();
+  }else{
+    heart->heartBeat();
+    if(heart->screen->pressed){
+      heart->beebBpm();
+    }
+  }
   heart->screen->pDisp->display();
 }

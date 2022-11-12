@@ -203,6 +203,8 @@ bool clock::initClock()
 /// @brief cette fonction recupere la valeur des registre et les affiche sur l'ecran oled
 void clock::afficheHeure()
 {
+  heart->screen->pDisp->clearDisplay();
+
   heart->screen->pDisp->setCursor(30,20);
   heart->screen->pDisp->setTextSize(2);
   heart->screen->pDisp->setTextColor(WHITE);
@@ -222,21 +224,32 @@ void clock::afficheHeure()
   heart->screen->pDisp->print((buffer & 0b00001111),DEC);
 }
 /// @brief cette fonction sert a switch entre l'heure et la courbe bpm. montage "Pull down" pour l'heure (deprecated ! )
-/// @return true si pressé, false sinon
-bool oled::isButtonPressed()
+/// @return -1 si aucune condition remplie, 1 si le beep a été toggle, 2 si il a eu double push
+int oled::isButtonPressed()
 {
   bButton = (bool)digitalRead(buttonPin);
-  if(bButton){
-    //ne pas revenir dans cette fonction pendant 1 secondes
-    if((heart->currentMillis - delayMax) > 1000){
+  doublePressed = false;
+  if(bButton){    //si on le bouton est appuyé
+    
+    if((heart->currentMillis - doublePush) > 1000){  //si ça fait plus de 1s que je ne suis pas rentré
+      press = true;                              
+      doublePush = heart->currentMillis;            
+    }
+    if(press && (((heart->currentMillis - doublePush) > 400) && ((heart->currentMillis - doublePush) < 1000))){ //si ça fait plus de 250ms que je ne suis pas rentré ET que ça fais moins de 500ms que je ne suis pas rentre
+        doublePressed = true;
+        press = false;
+        pressed = false;
+        return 2;
+    }
+    //ne pas revenir dans cette condition pendant 2 secondes
+    if((heart->currentMillis - delayMax) > 2000){
       pressed = !pressed;
       delayMax = heart->currentMillis;
+      Serial.println("we here");
+      return 1;
     }
-    return true;
-  }else{
-    return false;
   }
-  
+  return -1;
 }
 /// @brief ecran noir
 void oled::drawBlackScreen()
@@ -287,3 +300,4 @@ void heartSensor::beebBpm()
   }
   
 }
+

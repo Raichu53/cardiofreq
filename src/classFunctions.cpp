@@ -17,6 +17,13 @@ oled::oled()
     buffer = false;
 
     pressed = false;
+    press = false;
+    bool doublePressed = false;
+    delayMax = 0;
+    doublePush = 0;
+    secondPress = 0;
+
+    toggleScreen = false;
 }
 
 heartSensor::heartSensor()
@@ -31,6 +38,7 @@ heartSensor::heartSensor()
     interval = 0.f;
     toneValue = 0;
     lastBeep = 0;
+    bBpm = false;
     pinMode(redLed,OUTPUT);
     pinMode(yellowLed,OUTPUT);
     pinMode(greenLed,OUTPUT);
