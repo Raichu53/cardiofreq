@@ -33,8 +33,11 @@ void loop() {
   }
   if(heart->screen->toggleScreen){
     heart->horloge->afficheHeure();
+    heart->screen->drawGraph();
   }else{
-    heart->heartBeat();
+    
+    heart->heartBeat(false);
+
     if(heart->screen->pressed){
       heart->beebBpm();
     }

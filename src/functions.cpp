@@ -1,6 +1,6 @@
 #include "includes.h"
 /// @brief calcule les bpm grace a la periode entre chaque pic sur la courbe
-void heartSensor::heartBeat()
+void heartSensor::heartBeat(bool draw)
 {   
     unsigned long startTime,tempsEnHaut,period = 0;
     int moyenne;
@@ -21,12 +21,15 @@ void heartSensor::heartBeat()
     }
     
     //drawing sinusoide on oled screen
+    
     screen->cursorPos.x = screen->cursorPos.x + 1;
     if(screen->cursorPos.x > 128)
     {
-        screen->cursorPos.x = screen->cursorPos.x - 128;
-        screen->pDisp->clearDisplay();
+      screen->cursorPos.x = screen->cursorPos.x - 128;
+      screen->pDisp->clearDisplay();
     }
+    
+    
     for(int k = 0; k < 20;k++)
     {
         if(buffer[k] > moyenne){
@@ -37,6 +40,7 @@ void heartSensor::heartBeat()
             //vers le bas
             screen->cursorPos.y = screen->cursorPos.y + (moyenne - buffer[k]);
         }
+        //ligne pour debug la sinusoide
         screen->pDisp->drawLine(screen->cursorPos.x,32,screen->cursorPos.x,screen->cursorPos.y,WHITE);
     }
     /*
@@ -52,10 +56,10 @@ void heartSensor::heartBeat()
 
             bpm = periodToBPM(period);
             if(bpm>30){
-                screen->pDisp->setCursor(5,5);
-                screen->pDisp->setTextColor(WHITE,BLACK);
-                screen->pDisp->setTextSize(2);
-                screen->pDisp->println(bpm);
+              heart->screen->pDisp->setCursor(5,5);
+              heart->screen->pDisp->setTextColor(WHITE,BLACK);
+              heart->screen->pDisp->setTextSize(2);
+              heart->screen->pDisp->println(heart->bpm);
             }
             oldTime = tempsEnHaut; 
             start = !start;
@@ -66,6 +70,7 @@ void heartSensor::heartBeat()
         if(!start){
             start = !start;
             startTime = currentMillis;
+            
         }
     }
 }
@@ -204,8 +209,9 @@ void clock::afficheHeure()
 {
   heart->screen->pDisp->clearDisplay();
 
-  heart->screen->pDisp->setCursor(30,20);
-  heart->screen->pDisp->setTextSize(2);
+
+  heart->screen->pDisp->setCursor(75,1);
+  heart->screen->pDisp->setTextSize(1);
   heart->screen->pDisp->setTextColor(WHITE);
   //heures
   buffer = readRegister(0x02);
@@ -244,7 +250,6 @@ int oled::isButtonPressed()
     if((heart->currentMillis - delayMax) > 2000){
       pressed = !pressed;
       delayMax = heart->currentMillis;
-      Serial.println("we here");
       return 1;
     }
   }
@@ -300,4 +305,52 @@ void heartSensor::beebBpm()
   }
   
 }
+void oled::drawGraph()
+{
+  pDisp->setTextSize(1);
+  pDisp->setTextColor(WHITE);
 
+  //repere orthonorme
+  pDisp->drawLine(startingPoint.x,startingPoint.y,startingPoint.x + len.x,startingPoint.y,WHITE);
+  pDisp->drawLine(startingPoint.x,startingPoint.y,startingPoint.x,startingPoint.y - len.y,WHITE);
+
+  //echelle
+  POTvalue = analogRead(POTpin);
+  echelleABS = map(POTvalue,0,1023,0,100);
+
+  if(echelleABS < 33){ //10secondes <=> on decoup en 10
+    secondes = 10;
+    tailleDesDecoupes = (float)((float)len.x / (float)secondes);
+    for(int i = 0; i < secondes;i++){
+      pDisp->drawLine(startingPoint.x + (i*tailleDesDecoupes),startingPoint.y+2,startingPoint.x + (i*tailleDesDecoupes),startingPoint.y-2,WHITE);
+      pDisp->setCursor(startingPoint.x + (i*tailleDesDecoupes),startingPoint.y+3);
+      pDisp->println(i);
+    }
+    pDisp->setCursor(startingPoint.x + (9*tailleDesDecoupes)+6,startingPoint.y+3);
+    pDisp->println("s");
+  }else if((echelleABS > 33) && (echelleABS < 66)){ //1min
+    counter = 0;
+    secondes = 60;
+    tailleDesDecoupes = (float)((float)len.x / (float)(secondes/5));
+    for(int i = 0; i < secondes;i+=5){
+      pDisp->drawLine(startingPoint.x + (counter*tailleDesDecoupes),startingPoint.y+2,startingPoint.x + (counter*tailleDesDecoupes),startingPoint.y-2,WHITE);
+      pDisp->setCursor((startingPoint.x + (counter*tailleDesDecoupes))-5,startingPoint.y+3);
+      if(i == 5 || i == 10 || i == 30 || i == 55){
+        pDisp->println(i);
+      }
+      counter++;
+    }
+    pDisp->setCursor(startingPoint.x + (11*tailleDesDecoupes)+6,startingPoint.y+3);
+    pDisp->println("s");
+  }else if(echelleABS > 66){ //10 min
+    minutes = 10;
+    tailleDesDecoupes = (float)((float)len.x / (float)minutes);
+    for(int i = 0; i < minutes;i++){
+      pDisp->drawLine(startingPoint.x + (i*tailleDesDecoupes),startingPoint.y+2,startingPoint.x + (i*tailleDesDecoupes),startingPoint.y-2,WHITE);
+      pDisp->setCursor((startingPoint.x + (i*tailleDesDecoupes))-3,startingPoint.y+3);
+      pDisp->println(i);
+    }
+    pDisp->setCursor(startingPoint.x + (9*tailleDesDecoupes)+3,startingPoint.y+3);
+    pDisp->println("m");
+  }
+}

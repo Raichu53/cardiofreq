@@ -3,7 +3,6 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <Tone.h>
-#include <Adafruit_ILI9341.h> //pour les couleurs
 
 #define sensorHeartCapt A0
 #define clockPin 6
@@ -14,6 +13,7 @@
 #define yellowLed 11
 #define greenLed 10
 #define buzzerPin 5
+#define POTpin A2
 
 typedef struct vector2{
     int x,y;
@@ -42,9 +42,16 @@ public:
 
     unsigned long delayMax,doublePush;
 
+    //graph
+    vec2 startingPoint = {5,50};
+    vec2 len = {120,50};
+
+    int POTvalue,echelleABS,secondes,minutes,nbDeDecoupes,counter;
+    float tailleDesDecoupes;
     oled();
     int isButtonPressed();
     void drawBlackScreen();
+    void drawGraph();
 private:
 
 };
@@ -62,10 +69,11 @@ public:
     float interval;
     
     heartSensor();
-    void heartBeat();
+    void heartBeat(bool draw);
     void healthLeds(bool active);
     void beebBpm();
     int periodToBPM(unsigned long t);
+    
 private:
 };
 

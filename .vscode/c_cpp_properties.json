@@ -10,8 +10,8 @@
             "includePath": [
                 "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/include",
                 "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/src",
-                "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit ILI9341",
                 "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Tone",
+                "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit ILI9341",
                 "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit SSD1306",
                 "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit GFX Library",
                 "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit BusIO",
@@ -31,8 +31,8 @@
                 "path": [
                     "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/include",
                     "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/src",
-                    "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit ILI9341",
                     "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Tone",
+                    "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit ILI9341",
                     "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit SSD1306",
                     "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit GFX Library",
                     "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit BusIO",
