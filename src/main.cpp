@@ -17,7 +17,7 @@ void setup() {
     exit(1);
   }
   */
-  //horloge->initClock();
+  //heart->horloge->initClock();
   heart->screen->pDisp->clearDisplay();
 }
 
@@ -35,13 +35,14 @@ void loop() {
     heart->horloge->afficheHeure();
     heart->screen->drawGraph();
   }else{
-    
     heart->heartBeat(false);
-
+    heart->sendDataToEEPROM();
     if(heart->screen->pressed){
       heart->beebBpm();
     }
     heart->healthLeds(false);
   }
-  heart->screen->pDisp->display();
+  heart->screen->pDisp->display(
+
+  );
 }

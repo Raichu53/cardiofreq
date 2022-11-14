@@ -60,6 +60,8 @@ void heartSensor::heartBeat(bool draw)
               heart->screen->pDisp->setTextColor(WHITE,BLACK);
               heart->screen->pDisp->setTextSize(2);
               heart->screen->pDisp->println(heart->bpm);
+              //send value calculated to pc
+              sendDataToEEPROM();
             }
             oldTime = tempsEnHaut; 
             start = !start;
@@ -196,8 +198,8 @@ bool clock::initClock()
 {
   writeRegister(7,0b00000000);    // access aux registres
   writeRegister(0,0b00000000);    // secondes
-  writeRegister(1,0b01010010);    // minutes
-  writeRegister(2,0b00010011);    // 24 heures
+  writeRegister(1,0b00100011);    // minutes
+  writeRegister(2,0b00011000);    // 24 heures
   writeRegister(3,0b00010010);    // jour (numero)
   writeRegister(4,0b00010001);    // mois
   writeRegister(5,0b00000110);    // date (de 1-7 ex mardi)
@@ -352,5 +354,20 @@ void oled::drawGraph()
     }
     pDisp->setCursor(startingPoint.x + (9*tailleDesDecoupes)+3,startingPoint.y+3);
     pDisp->println("m");
+  }
+}
+void heartSensor::sendDataToEEPROM()
+{
+  buttonEEPROM = (bool)digitalRead(pinEEPROM);
+  
+  if(buttonEEPROM)
+  {
+    if((currentMillis - EEPROMtiming) > 1000) //toutes les secondes on peut rerentré
+    {
+      EEPROM.write(addr,bpm);
+      lastAddr = addr;
+      addr+= 1;
+      EEPROMtiming = currentMillis;
+    }
   }
 }

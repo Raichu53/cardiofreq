@@ -44,6 +44,8 @@ heartSensor::heartSensor()
     digitalWrite(greenLed,LOW);
 
     pinMode(buzzerPin,OUTPUT);
+
+    pinMode(pinEEPROM,INPUT);
 }
 //init param utilisé que lors de la creation
 clock::clock()

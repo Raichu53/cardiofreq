@@ -3,6 +3,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <Tone.h>
+#include <EEPROM.h>
 
 #define sensorHeartCapt A0
 #define clockPin 6
@@ -14,6 +15,7 @@
 #define greenLed 10
 #define buzzerPin 5
 #define POTpin A2
+#define pinEEPROM 4
 
 typedef struct vector2{
     int x,y;
@@ -60,20 +62,21 @@ class heartSensor
 public:
     oled* screen;
     clock* horloge;
-    unsigned long startMillis,currentMillis,oldTime,lastBeep;
+    unsigned long startMillis,currentMillis,oldTime,lastBeep,EEPROMtiming;
 
-    bool start;
+    bool start,buttonEEPROM;
 
-    int bpm,toneValue;
+    int bpm,toneValue,addr,lastAddr = 0;
  
     float interval;
+    
     
     heartSensor();
     void heartBeat(bool draw);
     void healthLeds(bool active);
     void beebBpm();
     int periodToBPM(unsigned long t);
-    
+    void sendDataToEEPROM();
 private:
 };
 
