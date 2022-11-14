@@ -60,8 +60,7 @@ void heartSensor::heartBeat(bool draw)
               heart->screen->pDisp->setTextColor(WHITE,BLACK);
               heart->screen->pDisp->setTextSize(2);
               heart->screen->pDisp->println(heart->bpm);
-              //send value calculated to pc
-              sendDataToEEPROM();
+              
             }
             oldTime = tempsEnHaut; 
             start = !start;
@@ -75,6 +74,29 @@ void heartSensor::heartBeat(bool draw)
             
         }
     }
+}
+void heartSensor::addTobuffer(){
+  if((currentMillis - bufferTiming) > 1000){
+    if(bufferCount < 10){
+      buffer10[bufferCount] = bpm;
+    }
+    else{
+      //FIFO
+      buffer10[0] = buffer10[1];
+      buffer10[1] = buffer10[2]; 
+      buffer10[2] = buffer10[3]; 
+      buffer10[3] = buffer10[4]; 
+      buffer10[4] = buffer10[5]; 
+      buffer10[5] = buffer10[6]; 
+      buffer10[6] = buffer10[7];
+      buffer10[7] = buffer10[8]; 
+      buffer10[8] = buffer10[9]; 
+      buffer10[9] = bpm;  
+
+    }
+  bufferCount++;
+  bufferTiming = currentMillis;
+  }
 }
 // period * x = 60 <=> x = 60/ period
 int heartSensor::periodToBPM(unsigned long t){
@@ -319,7 +341,11 @@ void oled::drawGraph()
   //echelle
   POTvalue = analogRead(POTpin);
   echelleABS = map(POTvalue,0,1023,0,100);
-
+  
+  for(int j = 1; j <= 5;j++){ //ordonées
+    pDisp->drawLine(startingPoint.x-2,startingPoint.y+(j*10),startingPoint.x+2,startingPoint.y+(j*10),WHITE);
+    
+  }
   if(echelleABS < 33){ //10secondes <=> on decoup en 10
     secondes = 10;
     tailleDesDecoupes = (float)((float)len.x / (float)secondes);
@@ -327,9 +353,11 @@ void oled::drawGraph()
       pDisp->drawLine(startingPoint.x + (i*tailleDesDecoupes),startingPoint.y+2,startingPoint.x + (i*tailleDesDecoupes),startingPoint.y-2,WHITE);
       pDisp->setCursor(startingPoint.x + (i*tailleDesDecoupes),startingPoint.y+3);
       pDisp->println(i);
+      
     }
     pDisp->setCursor(startingPoint.x + (9*tailleDesDecoupes)+6,startingPoint.y+3);
     pDisp->println("s");
+    
   }else if((echelleABS > 33) && (echelleABS < 66)){ //1min
     counter = 0;
     secondes = 60;

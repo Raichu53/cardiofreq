@@ -42,7 +42,7 @@ void loop() {
     }
     heart->healthLeds(false);
   }
+  heart->addTobuffer();
   heart->screen->pDisp->display(
-
   );
 }

@@ -17,6 +17,8 @@
 #define POTpin A2
 #define pinEEPROM 4
 
+#define MAX_HEIGHT_PPG 50 //en px
+
 typedef struct vector2{
     int x,y;
 }vec2;
@@ -62,21 +64,25 @@ class heartSensor
 public:
     oled* screen;
     clock* horloge;
-    unsigned long startMillis,currentMillis,oldTime,lastBeep,EEPROMtiming;
+    unsigned long startMillis,currentMillis,oldTime,lastBeep,EEPROMtiming,bufferTiming;
 
     bool start,buttonEEPROM;
 
-    int bpm,toneValue,addr,lastAddr = 0;
+    int bpm,toneValue,addr,lastAddr,bufferCount = 0;
  
     float interval;
-    
-    
+
+    int buffer10[10];
+    int buffer60[60];
+    int buffer600[600];
+
     heartSensor();
     void heartBeat(bool draw);
     void healthLeds(bool active);
     void beebBpm();
     int periodToBPM(unsigned long t);
     void sendDataToEEPROM();
+    void addTobuffer();
 private:
 };
 
