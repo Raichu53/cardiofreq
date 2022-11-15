@@ -95,8 +95,54 @@ void heartSensor::addTobuffer(){
       //Serial.print("bpm ecrit : ");
       //Serial.println(bpm);
     }
+  fillBuffer1min();
   bufferCount++;
   bufferTiming = currentMillis;
+  }
+}
+void heartSensor::fillBuffer1min()
+{
+  if(bufferCount%5 == 0){ //on rentre toute les 5 secondes
+
+    if(currentMillis-bufferTiming > 1000){
+      if(k <12){
+        buffer60[k] = moyenneBuffer10();
+        if(buffer60[k] > 100){
+          buffer60[k] = 0;
+        }
+        //Serial.println(buffer60[k]);
+      }
+      else{
+        //FIFO
+        buffer60[0] = buffer60[1];
+        buffer60[1] = buffer60[2]; 
+        buffer60[2] = buffer60[3]; 
+        buffer60[3] = buffer60[4]; 
+        buffer60[4] = buffer60[5]; 
+        buffer60[5] = buffer60[6]; 
+        buffer60[6] = buffer60[7];
+        buffer60[7] = buffer60[8]; 
+        buffer60[8] = buffer60[9]; 
+        buffer60[9] = buffer60[10];  
+        buffer60[10] = buffer60[11]; 
+        buffer60[11] = moyenneBuffer10(); 
+        
+    
+      }
+      k++;
+    }
+  }
+ 
+}
+int heartSensor::moyenneBuffer10()
+{
+  int moyenne,f;
+  if((bufferCount%5 == 0) && (bufferCount != 0)){
+    for(int i = 0; i < 5;i++){
+      moyenne += buffer10[i];
+    }
+    f = (moyenne / 5);
+    return f;
   }
 }
 // period * x = 60 <=> x = 60/ period
@@ -347,13 +393,15 @@ void oled::drawGraph()
     pDisp->setCursor(0,startingPoint.y-(j*10)),
     pDisp->println(j+5); //bpm a metre a *10
   }
-  if(echelleABS < 33){ //10secondes <=> on decoup en 10
+  if(echelleABS <= 33){ //10secondes <=> on decoup en 10
     secondes = 10;
+    heart->inverseI = 10;
     tailleDesDecoupes = (float)((float)len.x / (float)secondes);
     for(int i = 0; i < secondes;i++){
       pDisp->drawLine(startingPoint.x + (i*tailleDesDecoupes),startingPoint.y+2,startingPoint.x + (i*tailleDesDecoupes),startingPoint.y-2,WHITE);
       pDisp->setCursor(startingPoint.x + (i*tailleDesDecoupes),startingPoint.y+3);
-      pDisp->println(i);
+      heart->inverseI--;
+      pDisp->println(heart->inverseI);
       
     }
     pDisp->setCursor(startingPoint.x + (9*tailleDesDecoupes)+6,startingPoint.y+3);
@@ -362,42 +410,63 @@ void oled::drawGraph()
   }else if((echelleABS > 33) && (echelleABS < 66)){ //1min
     counter = 0;
     secondes = 60;
+    heart->inverseI = 60;
     tailleDesDecoupes = (float)((float)len.x / (float)(secondes/5));
     for(int i = 0; i < secondes;i+=5){
       pDisp->drawLine(startingPoint.x + (counter*tailleDesDecoupes),startingPoint.y+2,startingPoint.x + (counter*tailleDesDecoupes),startingPoint.y-2,WHITE);
       pDisp->setCursor((startingPoint.x + (counter*tailleDesDecoupes))-5,startingPoint.y+3);
-      if(i == 5 || i == 10 || i == 30 || i == 55){
-        pDisp->println(i);
+      heart->inverseI-=5;
+      if(i == 5 || i == 30 || i == 50 || i == 55){
+        pDisp->println(heart->inverseI);
       }
       counter++;
+      
+
     }
     pDisp->setCursor(startingPoint.x + (11*tailleDesDecoupes)+6,startingPoint.y+3);
     pDisp->println("s");
-  }else if(echelleABS > 66){ //10 min
+  }else if(echelleABS >= 66){ //10 min
     minutes = 10;
+    heart->inverseI = 10;
     tailleDesDecoupes = (float)((float)len.x / (float)minutes);
     for(int i = 0; i < minutes;i++){
       pDisp->drawLine(startingPoint.x + (i*tailleDesDecoupes),startingPoint.y+2,startingPoint.x + (i*tailleDesDecoupes),startingPoint.y-2,WHITE);
       pDisp->setCursor((startingPoint.x + (i*tailleDesDecoupes))-3,startingPoint.y+3);
-      pDisp->println(i);
+      heart->inverseI--;
+      pDisp->println(heart->inverseI);
     }
     pDisp->setCursor(startingPoint.x + (9*tailleDesDecoupes)+3,startingPoint.y+3);
     pDisp->println("m");
   }
 
   //tracage des rectangles
-  for(int l = 0; l < 10; l++){
-    if(heart->buffer10[l] > 51){
-      Serial.print("i : ");
-      Serial.print(l);
-      Serial.print("bpm : ");
-      Serial.println(heart->buffer10[l]);
-      pDisp->fillRect(startingPoint.x+(l*12),startingPoint.y-((heart->buffer10[l])-50),12,(heart->buffer10[l])-50,WHITE);
+  if(echelleABS <= 33){
+    for(int l = 0; l < 10; l++){
+      if(heart->buffer10[l] > 51){
+        
+        pDisp->fillRect(startingPoint.x+(l*12),startingPoint.y-((heart->buffer10[l])-50),12,(heart->buffer10[l])-50,WHITE);
+      }
+      else{ 
+        pDisp->setCursor(startingPoint.x+(l*12),startingPoint.y-5);
+        pDisp->println("F");
+      }
     }
-    else{ 
-      pDisp->setCursor(startingPoint.x+(l*12),startingPoint.y-5);
-      pDisp->println("F");
+  }
+  else if((echelleABS > 33) && (echelleABS < 66)){
+    for(int u = 0; u < 12;u++){
+      if(heart->buffer60[u] == 0){
+        continue;
+      }
+      if(heart->buffer60[u] > 51){
+        pDisp->fillRect(startingPoint.x+(u*10),startingPoint.y-((heart->buffer10[u])-50),10,(heart->buffer10[u])-50,WHITE);
+      }else{
+        pDisp->setCursor(startingPoint.x+(u*10),startingPoint.y-5);
+        pDisp->println("F");
+      }
     }
+  }
+  else if(echelleABS >= 66){
+
   }
 }
 void heartSensor::sendDataToEEPROM()

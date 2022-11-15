@@ -68,13 +68,13 @@ public:
 
     bool start,buttonEEPROM;
 
-    int bpm,toneValue,addr,lastAddr,bufferCount = 0;
+    int bpm,toneValue,addr,lastAddr,bufferCount,k,inverseI = 0;
  
     float interval;
 
     int buffer10[10];
-    //int buffer60[60];
-    //int buffer600[600];
+    int buffer60[12];
+    int buffer600[10];
 
     heartSensor();
     void heartBeat(bool draw);
@@ -82,7 +82,10 @@ public:
     void beebBpm();
     int periodToBPM(unsigned long t);
     void sendDataToEEPROM();
+
     void addTobuffer();
+    void fillBuffer1min();
+    int moyenneBuffer10();
 private:
 };
 
