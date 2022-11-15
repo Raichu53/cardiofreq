@@ -36,13 +36,14 @@ void loop() {
     heart->screen->drawGraph();
   }else{
     heart->heartBeat(false);
+    heart->addTobuffer();
     heart->sendDataToEEPROM();
     if(heart->screen->pressed){
       heart->beebBpm();
     }
     heart->healthLeds(false);
   }
-  heart->addTobuffer();
+  
   heart->screen->pDisp->display(
   );
 }

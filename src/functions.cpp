@@ -92,7 +92,8 @@ void heartSensor::addTobuffer(){
       buffer10[7] = buffer10[8]; 
       buffer10[8] = buffer10[9]; 
       buffer10[9] = bpm;  
-
+      //Serial.print("bpm ecrit : ");
+      //Serial.println(bpm);
     }
   bufferCount++;
   bufferTiming = currentMillis;
@@ -341,10 +342,10 @@ void oled::drawGraph()
   //echelle
   POTvalue = analogRead(POTpin);
   echelleABS = map(POTvalue,0,1023,0,100);
-  
   for(int j = 1; j <= 5;j++){ //ordonées
-    pDisp->drawLine(startingPoint.x-2,startingPoint.y+(j*10),startingPoint.x+2,startingPoint.y+(j*10),WHITE);
-    
+    pDisp->drawLine(startingPoint.x-2,startingPoint.y-(j*10),startingPoint.x+2,startingPoint.y-(j*10),WHITE);
+    pDisp->setCursor(0,startingPoint.y-(j*10)),
+    pDisp->println(j+5); //bpm a metre a *10
   }
   if(echelleABS < 33){ //10secondes <=> on decoup en 10
     secondes = 10;
@@ -382,6 +383,21 @@ void oled::drawGraph()
     }
     pDisp->setCursor(startingPoint.x + (9*tailleDesDecoupes)+3,startingPoint.y+3);
     pDisp->println("m");
+  }
+
+  //tracage des rectangles
+  for(int l = 0; l < 10; l++){
+    if(heart->buffer10[l] > 51){
+      Serial.print("i : ");
+      Serial.print(l);
+      Serial.print("bpm : ");
+      Serial.println(heart->buffer10[l]);
+      pDisp->fillRect(startingPoint.x+(l*12),startingPoint.y-((heart->buffer10[l])-50),12,(heart->buffer10[l])-50,WHITE);
+    }
+    else{ 
+      pDisp->setCursor(startingPoint.x+(l*12),startingPoint.y-5);
+      pDisp->println("F");
+    }
   }
 }
 void heartSensor::sendDataToEEPROM()

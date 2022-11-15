@@ -73,8 +73,8 @@ public:
     float interval;
 
     int buffer10[10];
-    int buffer60[60];
-    int buffer600[600];
+    //int buffer60[60];
+    //int buffer600[600];
 
     heartSensor();
     void heartBeat(bool draw);

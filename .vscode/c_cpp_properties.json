@@ -10,6 +10,7 @@
             "includePath": [
                 "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/include",
                 "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/src",
+                "C:/Users/matt0/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
                 "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Tone",
                 "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit ILI9341",
                 "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit SSD1306",
@@ -21,7 +22,6 @@
                 "C:/Users/matt0/.platformio/packages/framework-arduino-avr/variants/eightanaloginputs",
                 "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit STMPE610",
                 "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit TouchScreen",
-                "C:/Users/matt0/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
                 "C:/Users/matt0/.platformio/packages/framework-arduino-avr/libraries/HID/src",
                 "C:/Users/matt0/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
                 ""
@@ -31,6 +31,7 @@
                 "path": [
                     "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/include",
                     "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/src",
+                    "C:/Users/matt0/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
                     "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Tone",
                     "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit ILI9341",
                     "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit SSD1306",
@@ -42,7 +43,6 @@
                     "C:/Users/matt0/.platformio/packages/framework-arduino-avr/variants/eightanaloginputs",
                     "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit STMPE610",
                     "c:/Users/matt0/Documents/PlatformIO/Projects/cardiofreq/.pio/libdeps/nanoatmega328/Adafruit TouchScreen",
-                    "C:/Users/matt0/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
                     "C:/Users/matt0/.platformio/packages/framework-arduino-avr/libraries/HID/src",
                     "C:/Users/matt0/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
                     ""
