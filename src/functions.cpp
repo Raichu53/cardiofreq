@@ -74,7 +74,7 @@ void heartSensor::heartBeat(bool draw)
             
         }
     }
-}
+} 
 void heartSensor::addTobuffer(){
   if((currentMillis - bufferTiming) > 1000){
     if(bufferCount < 10){
@@ -267,8 +267,8 @@ bool clock::initClock()
 {
   writeRegister(7,0b00000000);    // access aux registres
   writeRegister(0,0b00000000);    // secondes
-  writeRegister(1,0b00100011);    // minutes
-  writeRegister(2,0b00011000);    // 24 heures
+  writeRegister(1,0b01010001);    // minutes
+  writeRegister(2,0b00010000);    // 24 heures
   writeRegister(3,0b00010010);    // jour (numero)
   writeRegister(4,0b00010001);    // mois
   writeRegister(5,0b00000110);    // date (de 1-7 ex mardi)
@@ -395,13 +395,12 @@ void oled::drawGraph()
   }
   if(echelleABS <= 33){ //10secondes <=> on decoup en 10
     secondes = 10;
-    heart->inverseI = 10;
     tailleDesDecoupes = (float)((float)len.x / (float)secondes);
     for(int i = 0; i < secondes;i++){
       pDisp->drawLine(startingPoint.x + (i*tailleDesDecoupes),startingPoint.y+2,startingPoint.x + (i*tailleDesDecoupes),startingPoint.y-2,WHITE);
       pDisp->setCursor(startingPoint.x + (i*tailleDesDecoupes),startingPoint.y+3);
       heart->inverseI--;
-      pDisp->println(heart->inverseI);
+      pDisp->println(i);
       
     }
     pDisp->setCursor(startingPoint.x + (9*tailleDesDecoupes)+6,startingPoint.y+3);
@@ -410,14 +409,13 @@ void oled::drawGraph()
   }else if((echelleABS > 33) && (echelleABS < 66)){ //1min
     counter = 0;
     secondes = 60;
-    heart->inverseI = 60;
     tailleDesDecoupes = (float)((float)len.x / (float)(secondes/5));
     for(int i = 0; i < secondes;i+=5){
       pDisp->drawLine(startingPoint.x + (counter*tailleDesDecoupes),startingPoint.y+2,startingPoint.x + (counter*tailleDesDecoupes),startingPoint.y-2,WHITE);
       pDisp->setCursor((startingPoint.x + (counter*tailleDesDecoupes))-5,startingPoint.y+3);
       heart->inverseI-=5;
-      if(i == 5 || i == 30 || i == 50 || i == 55){
-        pDisp->println(heart->inverseI);
+      if(i == 5 || i == 25 || i == 50 || i == 55){
+        pDisp->println(i);
       }
       counter++;
       
@@ -427,13 +425,12 @@ void oled::drawGraph()
     pDisp->println("s");
   }else if(echelleABS >= 66){ //10 min
     minutes = 10;
-    heart->inverseI = 10;
     tailleDesDecoupes = (float)((float)len.x / (float)minutes);
     for(int i = 0; i < minutes;i++){
       pDisp->drawLine(startingPoint.x + (i*tailleDesDecoupes),startingPoint.y+2,startingPoint.x + (i*tailleDesDecoupes),startingPoint.y-2,WHITE);
       pDisp->setCursor((startingPoint.x + (i*tailleDesDecoupes))-3,startingPoint.y+3);
       heart->inverseI--;
-      pDisp->println(heart->inverseI);
+      pDisp->println(i);
     }
     pDisp->setCursor(startingPoint.x + (9*tailleDesDecoupes)+3,startingPoint.y+3);
     pDisp->println("m");
