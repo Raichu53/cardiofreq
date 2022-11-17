@@ -33,6 +33,8 @@ heartSensor::heartSensor()
     interval = 0.f;
     toneValue = 0;
     lastBeep = 0;
+    inverseI = 10;
+    k1 = 0;
     pinMode(sensorHeartCapt,INPUT);
 
     pinMode(redLed,OUTPUT);

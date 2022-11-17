@@ -68,13 +68,13 @@ public:
 
     bool start,buttonEEPROM;
 
-    int bpm,toneValue,addr,lastAddr,bufferCount,k,inverseI = 0;
+    int bpm,toneValue,addr,lastAddr,bufferCount,k1,inverseI = 0;
  
     float interval;
 
     int buffer10[10];
     int buffer60[12];
-    int buffer600[10];
+    //int buffer600[10];
 
     heartSensor();
     void heartBeat(bool draw);
